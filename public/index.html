@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abdullah games | صفحة الألعاب</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #22d3ee;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(180deg, #020617, #0f172a 40%, #111827);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.2rem;
+    }
+
+    .hero {
+      background: radial-gradient(circle at top right, #155e75 0%, #0f172a 60%);
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    p { color: var(--muted); }
+
+    .games-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .game-card {
+      background: var(--card);
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .emoji { font-size: 2rem; }
+    .game-name { font-size: 1.1rem; font-weight: bold; }
+
+    .btn {
+      margin-top: auto;
+      background: var(--accent);
+      color: #0f172a;
+      border: 0;
+      border-radius: 10px;
+      padding: 0.55rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hint {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>Abdullah games</h1>
+      <p>أهلًا بك في صفحة الألعاب! هذه نسخة أولية فيها ألعاب مبدئية، وتقدر تضيف ألعاب جديدة بسهولة لاحقًا عبر ملف البيانات.</p>
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: 0.8rem;">صفحة الألعاب</h2>
+      <div id="gamesGrid" class="games-grid"></div>
+      <div class="hint">لإضافة لعبة جديدة: أضف عنصر جديد في <code>data/games.json</code> مع إنشاء ملف اللعبة داخل <code>public/games</code>.</div>
+    </section>
+  </main>
+
+  <script>
+    const gamesGrid = document.getElementById('gamesGrid');
+
+    async function loadGames() {
+      const response = await fetch('/api/games');
+      const games = await response.json();
+
+      gamesGrid.innerHTML = games.map((game) => `
+        <article class="game-card">
+          <div class="emoji">${game.thumbnail}</div>
+          <div class="game-name">${game.name}</div>
+          <p>${game.description}</p>
+          <a href="/game.html?slug=${game.slug}"><button class="btn">ابدأ اللعب</button></a>
+        </article>
+      `).join('');
+    }
+
+    loadGames();
+  </script>
+</body>
+</html>

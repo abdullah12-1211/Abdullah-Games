@@ -1,0 +1,9 @@
+{
+  "name": "abdullah-games",
+  "version": "1.0.0",
+  "description": "Abdullah games full-stack starter",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

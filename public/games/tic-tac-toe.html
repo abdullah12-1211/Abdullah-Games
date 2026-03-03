@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إكس أو</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 6px;
+      margin: 1rem 0;
+    }
+    .cell {
+      width: 80px;
+      height: 80px;
+      font-size: 1.7rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>لعبة إكس أو</h2>
+  <p id="status">الدور على: X</p>
+  <div class="grid" id="grid"></div>
+  <button onclick="resetGame()">إعادة اللعب</button>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const statusText = document.getElementById('status');
+    let board = Array(9).fill('');
+    let player = 'X';
+    let finished = false;
+
+    function render() {
+      grid.innerHTML = '';
+      board.forEach((value, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'cell';
+        btn.textContent = value;
+        btn.onclick = () => move(index);
+        grid.appendChild(btn);
+      });
+    }
+
+    function winnerCheck() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.find(([a,b,c]) => board[a] && board[a] === board[b] && board[b] === board[c]);
+    }
+
+    function move(i) {
+      if (finished || board[i]) return;
+      board[i] = player;
+      const win = winnerCheck();
+      if (win) {
+        statusText.textContent = `الفائز: ${player}`;
+        finished = true;
+      } else if (board.every(Boolean)) {
+        statusText.textContent = 'تعادل';
+        finished = true;
+      } else {
+        player = player === 'X' ? 'O' : 'X';
+        statusText.textContent = `الدور على: ${player}`;
+      }
+      render();
+    }
+
+    function resetGame() {
+      board = Array(9).fill('');
+      player = 'X';
+      finished = false;
+      statusText.textContent = 'الدور على: X';
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
