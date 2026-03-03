@@ -95,7 +95,7 @@
     const gamesGrid = document.getElementById('gamesGrid');
 
     async function loadGames() {
-      const response = await fetch('/api/games');
+      const response = await fetch('./data/games.json');
       const games = await response.json();
 
       gamesGrid.innerHTML = games.map((game) => `
@@ -103,7 +103,7 @@
           <div class="emoji">${game.thumbnail}</div>
           <div class="game-name">${game.name}</div>
           <p>${game.description}</p>
-          <a href="/game.html?slug=${game.slug}"><button class="btn">ابدأ اللعب</button></a>
+          <a href="./game.html?slug=${game.slug}"><button class="btn">ابدأ اللعب</button></a>
         </article>
       `).join('');
     }

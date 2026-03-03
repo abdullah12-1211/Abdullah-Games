@@ -58,9 +58,27 @@ function serveStatic(requestPath, res) {
   });
 }
 
+function serveGamesData(res) {
+  fs.readFile(gamesFilePath, (error, content) => {
+    if (error) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ message: 'Failed to load games data' }));
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(content);
+  });
+}
+
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
   const requestPath = parsed.pathname;
+
+  if (req.method === 'GET' && requestPath === '/data/games.json') {
+    serveGamesData(res);
+    return;
+  }
 
   if (req.method === 'GET' && requestPath === '/api/games') {
     readGames((error, games) => {
