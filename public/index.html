@@ -117,6 +117,38 @@
       padding: 1rem;
     }
 
+    #HCB_comment_box h3:first-child,
+    #HCB_comment_box #hcb_form_name_container,
+    #HCB_comment_box #hcb_form_name,
+    #HCB_comment_box #hcb_file,
+    #HCB_comment_box #hcb_file_label,
+    #HCB_comment_box .hcb-comment-tb,
+    #HCB_comment_box .likes,
+    #HCB_comment_box #replying_to_container {
+      display: none !important;
+    }
+
+    #HCB_comment_box .hcb-shadow-t,
+    #HCB_comment_box .hcb-shadow-b,
+    #HCB_comment_box .hcb-shadow-tl,
+    #HCB_comment_box .hcb-shadow-tr,
+    #HCB_comment_box .hcb-shadow-bl,
+    #HCB_comment_box .hcb-shadow-br {
+      display: none !important;
+    }
+
+    #HCB_comment_box .hcb-shadow-m,
+    #HCB_comment_box .hcb-shadow-r,
+    #HCB_comment_box .hcb-wrapper,
+    #HCB_comment_box .hcb-wrapper-half {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
     #HCB_comment_box textarea,
     #HCB_comment_box input.text {
       width: 100%;
@@ -127,6 +159,7 @@
       padding: 0.65rem;
       font-family: inherit;
       margin-top: 0.45rem;
+      box-shadow: none !important;
     }
 
     #HCB_comment_box #hcb_form .btn,
@@ -215,6 +248,12 @@
       border-radius: 14px;
       padding: 0.9rem;
       margin-bottom: 1rem;
+    }
+
+    #HCB_comment_box #hcb_form > div:last-of-type {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 0.85rem;
     }
 
     #HCB_comment_box #hcb_form small,
@@ -401,7 +440,7 @@
     (function loadCommentWidget() {
       const script = document.createElement('script');
       const page = encodeURIComponent(window.hcb_user.PAGE).replace(/\+/g, '%2B');
-      script.src = `https://www.htmlcommentbox.com/jread?page=${page}&opts=16798&num=10`;
+      script.src = `https://www.htmlcommentbox.com/jread?page=${page}&opts=278&num=10`;
       script.type = 'text/javascript';
       document.head.appendChild(script);
     })();
