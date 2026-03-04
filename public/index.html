@@ -263,10 +263,12 @@
   <div id="surpriseOverlay" class="surprise-overlay" role="dialog" aria-modal="true" aria-label="مفاجأة">
     <div class="surprise-card">
       <h3 style="margin-bottom: 0.6rem;">اتحداك تطلع ههههههههه</h3>
+      <p>طلع لك التحدي فجأة... حاول تطلع منها 😄</p>
       <div class="escape-area" id="escapeArea">
         <button class="runaway-close" id="runawayClose">X خروج</button>
       </div>
       <button id="forceExitBtn" class="btn" type="button" style="width: 100%;">طيب خلاص طلعني ما اعرف اطلع انت اعظم شخص</button>
+      <p class="small-note">زر X يهرب إذا قربت منه، وزر "طيب خلاص" يطلعك مباشرة.</p>
     </div>
   </div>
 
@@ -280,6 +282,7 @@
     const runawayClose = document.getElementById('runawayClose');
     const escapeArea = document.getElementById('escapeArea');
     const forceExitBtn = document.getElementById('forceExitBtn');
+    const localCommentsKey = 'abdullahGamesComments';
     let commentsApiAvailable = false;
 
     async function loadGames() {
@@ -323,6 +326,18 @@
         .filter(Boolean);
     }
 
+    function loadLocalComments() {
+      try {
+        return normalizeComments(JSON.parse(localStorage.getItem(localCommentsKey) || '[]'));
+      } catch (_error) {
+        return [];
+      }
+    }
+
+    function saveLocalComments(comments) {
+      localStorage.setItem(localCommentsKey, JSON.stringify(comments));
+    }
+
     async function fetchComments() {
       try {
         const response = await fetch('/api/comments', { cache: 'no-store' });
@@ -334,16 +349,13 @@
         return normalizeComments(await response.json());
       } catch (_error) {
         commentsApiAvailable = false;
-        commentsMode.textContent = 'هذه النسخة على GitHub Pages تعرض التعليقات فقط. الإضافة والحذف المشترك يحتاجان تشغيل الخادم.';
-        addCommentBtn.disabled = true;
-        commentInput.disabled = true;
+        commentsMode.textContent = 'التعليقات هنا تعمل على جهازك فقط. النسخة المشتركة بين كل المستخدمين تحتاج تشغيل الخادم.';
+        addCommentBtn.disabled = false;
+        commentInput.disabled = false;
 
         const fallbackResponse = await fetch('./data/comments.json', { cache: 'no-store' });
-        if (!fallbackResponse.ok) {
-          return [];
-        }
-
-        return normalizeComments(await fallbackResponse.json());
+        const fileComments = fallbackResponse.ok ? normalizeComments(await fallbackResponse.json()) : [];
+        return normalizeComments([...loadLocalComments(), ...fileComments]);
       }
     }
 
@@ -388,7 +400,6 @@
         removeButton.type = 'button';
         removeButton.setAttribute('aria-label', 'حذف التعليق');
         removeButton.textContent = '✕';
-        removeButton.disabled = !commentsApiAvailable;
 
         content.appendChild(textElement);
         content.appendChild(timeElement);
@@ -400,7 +411,20 @@
 
     async function addComment() {
       const text = commentInput.value.trim();
-      if (!text || !commentsApiAvailable) return;
+      if (!text) return;
+
+      if (!commentsApiAvailable) {
+        const comments = loadLocalComments();
+        comments.unshift({
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          text,
+          createdAt: Date.now()
+        });
+        saveLocalComments(comments);
+        commentInput.value = '';
+        await renderComments();
+        return;
+      }
 
       const response = await fetch('/api/comments', {
         method: 'POST',
@@ -429,10 +453,16 @@
 
     commentsList.addEventListener('click', async (event) => {
       if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('comment-remove')) return;
-      if (!commentsApiAvailable) return;
 
       const commentId = event.target.dataset.id;
       if (!commentId) return;
+
+      if (!commentsApiAvailable) {
+        const comments = loadLocalComments().filter((comment) => comment.id !== commentId);
+        saveLocalComments(comments);
+        await renderComments();
+        return;
+      }
 
       const response = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, {
         method: 'DELETE'
