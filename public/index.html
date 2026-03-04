@@ -365,8 +365,7 @@
     });
 
     window.addEventListener('load', () => {
-      setTimeout(openSurpriseOverlay, 120000);
-      setInterval(openSurpriseOverlay, 120000);
+      openSurpriseOverlay();
     });
 
     if (!window.hcb_user) {
