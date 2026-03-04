@@ -40,6 +40,13 @@
     h1 { font-size: 2rem; margin-bottom: 0.5rem; }
     p { color: var(--muted); }
 
+    .hero-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
     .games-grid {
       display: grid;
       gap: 1rem;
@@ -65,9 +72,15 @@
       color: #0f172a;
       border: 0;
       border-radius: 10px;
-      padding: 0.55rem;
+      padding: 0.55rem 0.9rem;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid #67e8f9;
     }
 
     .hint {
@@ -85,97 +98,64 @@
     }
 
     .comments-title {
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.4rem;
       font-size: 1.1rem;
     }
 
-    .comment-search {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      background: #f8fafc;
-      border-radius: 999px;
-      padding: 0.45rem 0.7rem;
-      border: 2px solid #22d3ee;
+    .comments-note {
+      color: #94a3b8;
+      font-size: 0.9rem;
       margin-bottom: 0.8rem;
     }
 
-    .comment-search input {
-      flex: 1;
-      border: 0;
-      outline: none;
-      background: transparent;
-      color: #0f172a;
-      font-size: 0.95rem;
+    #HCB_comment_box {
+      direction: rtl;
+      text-align: right;
     }
 
-    .comment-search button {
+    #HCB_comment_box textarea,
+    #HCB_comment_box input.text {
+      width: 100%;
+      background: #f8fafc;
+      color: #0f172a;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      padding: 0.65rem;
+      font-family: inherit;
+    }
+
+    #HCB_comment_box #hcb_form .btn,
+    #HCB_comment_box input.submit {
+      background: #0ea5e9;
+      color: #fff;
       border: 0;
       border-radius: 999px;
-      background: #0ea5e9;
-      color: white;
-      padding: 0.45rem 0.9rem;
+      padding: 0.45rem 1rem;
       cursor: pointer;
       font-weight: bold;
     }
 
-    .comment-search button:disabled,
-    .comment-remove:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .comments-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      max-height: 260px;
-      overflow-y: auto;
-      padding-left: 0;
-    }
-
-    .comment-item {
-      display: flex;
-      gap: 0.6rem;
-      align-items: start;
-      justify-content: space-between;
+    #HCB_comment_box .comment {
       background: #1e293b;
       border: 1px solid #334155;
       border-radius: 12px;
-      padding: 0.6rem 0.7rem;
-    }
-
-    .comment-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .comment-text {
+      padding: 0.8rem;
+      margin-top: 0.8rem;
       color: #e2e8f0;
-      word-break: break-word;
     }
 
-    .comment-time {
+    #HCB_comment_box .comment a,
+    #HCB_comment_box .hcb-comment-tb a {
+      color: #67e8f9;
+    }
+
+    #HCB_comment_box .author-name,
+    #HCB_comment_box .hcb-comment-body {
+      color: #e2e8f0;
+    }
+
+    #HCB_comment_box .date {
       color: #94a3b8;
-      font-size: 0.75rem;
-    }
-
-    .comment-remove {
-      border: 0;
-      background: transparent;
-      color: #f87171;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .empty-comments,
-    .comments-mode {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      padding: 0.5rem 0;
     }
 
     .surprise-overlay {
@@ -241,6 +221,9 @@
     <section class="hero">
       <h1>Abdullah games</h1>
       <p>أهلًا بك في افضل موقع في التاريخ .</p>
+      <div class="hero-actions">
+        <button id="showSurpriseBtn" class="btn btn-secondary" type="button">شغل الحركة الظريفة</button>
+      </div>
     </section>
 
     <section>
@@ -250,13 +233,9 @@
     </section>
 
     <section class="comments-section">
-      <h3 class="comments-title">💬 تعليقات الزوار <span id="commentsCount" class="small-note"></span></h3>
-      <div class="comment-search">
-        <input id="commentInput" type="text" placeholder="اكتب تعليق مثل هاذا اعظم موقع جربته ..." maxlength="160" />
-        <button id="addCommentBtn" type="button">إضافة</button>
-      </div>
-      <div id="commentsMode" class="comments-mode"></div>
-      <ul id="commentsList" class="comments-list"></ul>
+      <h3 class="comments-title">💬 تعليقات الزوار</h3>
+      <p class="comments-note">التعليقات هنا مشتركة بين كل الزوار عبر خدمة تعليقات مستضافة.</p>
+      <div id="HCB_comment_box">جاري تحميل التعليقات...</div>
     </section>
   </main>
 
@@ -272,18 +251,13 @@
     </div>
   </div>
 
+  <link rel="stylesheet" type="text/css" href="https://www.htmlcommentbox.com/static/commentbox.css" />
   <script>
     const gamesGrid = document.getElementById('gamesGrid');
-    const commentInput = document.getElementById('commentInput');
-    const addCommentBtn = document.getElementById('addCommentBtn');
-    const commentsList = document.getElementById('commentsList');
-    const commentsCount = document.getElementById('commentsCount');
-    const commentsMode = document.getElementById('commentsMode');
     const runawayClose = document.getElementById('runawayClose');
     const escapeArea = document.getElementById('escapeArea');
     const forceExitBtn = document.getElementById('forceExitBtn');
-    const localCommentsKey = 'abdullahGamesComments';
-    let commentsApiAvailable = false;
+    const showSurpriseBtn = document.getElementById('showSurpriseBtn');
 
     async function loadGames() {
       const response = await fetch('./data/games.json');
@@ -303,178 +277,14 @@
       `).join('');
     }
 
-    function normalizeComments(rawValue) {
-      if (!Array.isArray(rawValue)) return [];
-      return rawValue
-        .map((item) => {
-          if (typeof item === 'string') {
-            return {
-              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-              text: item,
-              createdAt: Date.now()
-            };
-          }
-          if (!item || typeof item.text !== 'string') {
-            return null;
-          }
-          return {
-            id: typeof item.id === 'string' ? item.id : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-            text: item.text,
-            createdAt: typeof item.createdAt === 'number' ? item.createdAt : Date.now()
-          };
-        })
-        .filter(Boolean);
+    function openSurpriseOverlay() {
+      document.body.classList.add('overlay-open');
     }
 
-    function loadLocalComments() {
-      try {
-        return normalizeComments(JSON.parse(localStorage.getItem(localCommentsKey) || '[]'));
-      } catch (_error) {
-        return [];
-      }
+    function closeSurpriseOverlay() {
+      document.body.classList.remove('overlay-open');
+      sessionStorage.setItem('surpriseSeen', 'true');
     }
-
-    function saveLocalComments(comments) {
-      localStorage.setItem(localCommentsKey, JSON.stringify(comments));
-    }
-
-    async function fetchComments() {
-      try {
-        const response = await fetch('/api/comments', { cache: 'no-store' });
-        if (!response.ok) throw new Error('api unavailable');
-        commentsApiAvailable = true;
-        commentsMode.textContent = 'التعليقات الآن مشتركة بين كل المستخدمين.';
-        addCommentBtn.disabled = false;
-        commentInput.disabled = false;
-        return normalizeComments(await response.json());
-      } catch (_error) {
-        commentsApiAvailable = false;
-        commentsMode.textContent = 'التعليقات هنا تعمل على جهازك فقط. النسخة المشتركة بين كل المستخدمين تحتاج تشغيل الخادم.';
-        addCommentBtn.disabled = false;
-        commentInput.disabled = false;
-
-        const fallbackResponse = await fetch('./data/comments.json', { cache: 'no-store' });
-        const fileComments = fallbackResponse.ok ? normalizeComments(await fallbackResponse.json()) : [];
-        return normalizeComments([...loadLocalComments(), ...fileComments]);
-      }
-    }
-
-    function formatCommentTime(timestamp) {
-      return new Date(timestamp).toLocaleString('ar-SA', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-
-    async function renderComments() {
-      const comments = await fetchComments();
-      commentsCount.textContent = `(${comments.length})`;
-      commentsList.innerHTML = '';
-
-      if (!comments.length) {
-        commentsList.innerHTML = '<li class="empty-comments">ما فيه تعليقات حالياً، اكتب أول تعليق 👇</li>';
-        return;
-      }
-
-      comments.forEach((comment) => {
-        const item = document.createElement('li');
-        item.className = 'comment-item';
-
-        const content = document.createElement('div');
-        content.className = 'comment-content';
-
-        const textElement = document.createElement('span');
-        textElement.className = 'comment-text';
-        textElement.textContent = comment.text;
-
-        const timeElement = document.createElement('span');
-        timeElement.className = 'comment-time';
-        timeElement.textContent = formatCommentTime(comment.createdAt);
-
-        const removeButton = document.createElement('button');
-        removeButton.className = 'comment-remove';
-        removeButton.dataset.id = comment.id;
-        removeButton.type = 'button';
-        removeButton.setAttribute('aria-label', 'حذف التعليق');
-        removeButton.textContent = '✕';
-
-        content.appendChild(textElement);
-        content.appendChild(timeElement);
-        item.appendChild(content);
-        item.appendChild(removeButton);
-        commentsList.appendChild(item);
-      });
-    }
-
-    async function addComment() {
-      const text = commentInput.value.trim();
-      if (!text) return;
-
-      if (!commentsApiAvailable) {
-        const comments = loadLocalComments();
-        comments.unshift({
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          text,
-          createdAt: Date.now()
-        });
-        saveLocalComments(comments);
-        commentInput.value = '';
-        await renderComments();
-        return;
-      }
-
-      const response = await fetch('/api/comments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text })
-      });
-
-      if (!response.ok) {
-        alert('تعذر حفظ التعليق.');
-        return;
-      }
-
-      commentInput.value = '';
-      await renderComments();
-    }
-
-    addCommentBtn.addEventListener('click', addComment);
-    commentInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        addComment();
-      }
-    });
-
-    commentsList.addEventListener('click', async (event) => {
-      if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('comment-remove')) return;
-
-      const commentId = event.target.dataset.id;
-      if (!commentId) return;
-
-      if (!commentsApiAvailable) {
-        const comments = loadLocalComments().filter((comment) => comment.id !== commentId);
-        saveLocalComments(comments);
-        await renderComments();
-        return;
-      }
-
-      const response = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        alert('تعذر حذف التعليق.');
-        return;
-      }
-
-      await renderComments();
-    });
 
     function jumpCloseButton() {
       const areaRect = escapeArea.getBoundingClientRect();
@@ -487,27 +297,49 @@
 
     runawayClose.addEventListener('mouseenter', jumpCloseButton);
     runawayClose.addEventListener('click', jumpCloseButton);
-
-    forceExitBtn.addEventListener('click', () => {
-      document.body.classList.remove('overlay-open');
-      sessionStorage.setItem('surpriseSeen', 'true');
-    });
+    forceExitBtn.addEventListener('click', closeSurpriseOverlay);
+    showSurpriseBtn.addEventListener('click', openSurpriseOverlay);
 
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
-        document.body.classList.remove('overlay-open');
+        closeSurpriseOverlay();
       }
     });
 
-    window.addEventListener('load', async () => {
-      await renderComments();
-
+    window.addEventListener('load', () => {
       if (sessionStorage.getItem('surpriseSeen') !== 'true') {
-        setTimeout(() => {
-          document.body.classList.add('overlay-open');
-        }, 1800);
+        setTimeout(openSurpriseOverlay, 1800);
       }
     });
+
+    if (!window.hcb_user) {
+      window.hcb_user = {};
+    }
+
+    window.hcb_user.PAGE = `${window.location.origin}${window.location.pathname}`;
+    window.hcb_user.comments_header = 'تعليقات الزوار';
+    window.hcb_user.name_label = 'الاسم';
+    window.hcb_user.content_label = 'اكتب تعليقك هنا...';
+    window.hcb_user.submit = 'إضافة';
+    window.hcb_user.no_comments_msg = 'ما فيه تعليقات حالياً، اكتب أول تعليق 👇';
+    window.hcb_user.add = 'أضف تعليقك';
+    window.hcb_user.again = 'أضف تعليقًا آخر';
+    window.hcb_user.website_label = 'الموقع (اختياري)';
+    window.hcb_user.email_label = 'البريد (اختياري)';
+    window.hcb_user.anonymous = 'زائر';
+    window.hcb_user.msg_thankyou = 'تم إرسال تعليقك.';
+    window.hcb_user.err_comment_empty = 'اكتب تعليق أولًا.';
+    window.hcb_user.err_too_frequent = 'انتظر قليلًا قبل إرسال تعليق جديد.';
+    window.hcb_user.MAX_CHARS = 160;
+    window.hcb_user.RELATIVE_DATES = true;
+
+    (function loadCommentWidget() {
+      const script = document.createElement('script');
+      const page = encodeURIComponent(window.hcb_user.PAGE).replace(/\+/g, '%2B');
+      script.src = `https://www.htmlcommentbox.com/jread?page=${page}&opts=16798&num=10`;
+      script.type = 'text/javascript';
+      document.head.appendChild(script);
+    })();
 
     loadGames();
   </script>
