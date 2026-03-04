@@ -304,12 +304,10 @@
   <div id="surpriseOverlay" class="surprise-overlay" role="dialog" aria-modal="true" aria-label="مفاجأة">
     <div class="surprise-card">
       <h3 style="margin-bottom: 0.6rem;">اتحداك تطلع ههههههههه</h3>
-      <p>طلع لك التحدي فجأة... حاول تطلع منها 😄</p>
       <div class="escape-area" id="escapeArea">
         <button class="runaway-close" id="runawayClose">X خروج</button>
       </div>
       <button id="forceExitBtn" class="btn" type="button" style="width: 100%;">طيب خلاص طلعني ما اعرف اطلع انت اعظم شخص</button>
-      <p class="small-note">زر X يهرب إذا قربت منه، وزر "طيب خلاص" يطلعك مباشرة.</p>
     </div>
   </div>
 
@@ -367,12 +365,8 @@
     });
 
     window.addEventListener('load', () => {
-      if (sessionStorage.getItem('surpriseSeen') === 'true') {
-        return;
-      }
-
-      const randomDelay = 3000 + Math.floor(Math.random() * 9000);
-      setTimeout(openSurpriseOverlay, randomDelay);
+      setTimeout(openSurpriseOverlay, 120000);
+      setInterval(openSurpriseOverlay, 120000);
     });
 
     if (!window.hcb_user) {
