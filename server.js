@@ -114,6 +114,11 @@ const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
   const requestPath = parsed.pathname;
 
+  if (req.method === 'GET' && requestPath === '/healthz') {
+    sendJson(res, 200, { ok: true });
+    return;
+  }
+
   if (req.method === 'GET' && requestPath === '/api/games') {
     readGames((error, games) => {
       if (error) {

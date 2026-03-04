@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: abdullah-games
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    disk:
+      name: comments-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
