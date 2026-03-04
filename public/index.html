@@ -75,6 +75,158 @@
       font-size: 0.9rem;
       color: #94a3b8;
     }
+
+    .comments-section {
+      margin-top: 2rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .comments-title {
+      margin-bottom: 0.8rem;
+      font-size: 1.1rem;
+    }
+
+    .comment-search {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: 999px;
+      padding: 0.45rem 0.7rem;
+      border: 2px solid #22d3ee;
+      margin-bottom: 0.8rem;
+    }
+
+    .comment-search input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: #0f172a;
+      font-size: 0.95rem;
+    }
+
+    .comment-search button {
+      border: 0;
+      border-radius: 999px;
+      background: #0ea5e9;
+      color: white;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .comments-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-left: 0;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 0.6rem;
+      align-items: start;
+      justify-content: space-between;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.6rem 0.7rem;
+    }
+
+    .comment-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .comment-text {
+      color: #e2e8f0;
+      word-break: break-word;
+    }
+
+    .comment-time {
+      color: #94a3b8;
+      font-size: 0.75rem;
+    }
+
+    .comment-remove {
+      border: 0;
+      background: transparent;
+      color: #f87171;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .empty-comments {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+
+    .surprise-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 6, 23, 0.84);
+      z-index: 999;
+      padding: 1rem;
+    }
+
+    .surprise-card {
+      width: min(430px, 95vw);
+      border-radius: 16px;
+      background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+      border: 2px solid #e2e8f0;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.7);
+    }
+
+    .surprise-card p {
+      color: #fdf4ff;
+      margin-bottom: 0.7rem;
+    }
+
+    .escape-area {
+      position: relative;
+      height: 90px;
+      border: 1px dashed rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+      margin-bottom: 0.7rem;
+    }
+
+    .runaway-close {
+      position: absolute;
+      top: 30px;
+      left: 45%;
+      transform: translateX(-50%);
+      border: 0;
+      border-radius: 999px;
+      background: #111827;
+      color: #f8fafc;
+      padding: 0.35rem 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .overlay-open .surprise-overlay {
+      display: flex;
+    }
+
+    .small-note {
+      font-size: 0.85rem;
+      opacity: 0.92;
+    }
   </style>
 </head>
 <body>
@@ -89,13 +241,42 @@
       <div id="gamesGrid" class="games-grid"></div>
       <div class="hint">لإضافة لعبة جديدة: أضف عنصر جديد في <code>data/games.json</code> مع إنشاء ملف اللعبة داخل <code>public/games</code>.</div>
     </section>
+
+    <section class="comments-section">
+      <h3 class="comments-title">💬 تعليقات الزوار <span id="commentsCount" class="small-note"></span></h3>
+      <div class="comment-search">
+        <input id="commentInput" type="text" placeholder="اكتب تعليق مثل هاذا اعظم موقع جربته ..." maxlength="160" />
+        <button id="addCommentBtn" type="button">إضافة</button>
+      </div>
+      <ul id="commentsList" class="comments-list"></ul>
+    </section>
   </main>
+
+  <div id="surpriseOverlay" class="surprise-overlay" role="dialog" aria-modal="true" aria-label="مفاجأة">
+    <div class="surprise-card">
+      <h3 style="margin-bottom: 0.6rem;">اتحداك تطلع ههههههههه</h3>
+      <p>  مو كذا يا غبي هههههههههههه</p>
+      <div class="escape-area" id="escapeArea">
+        <button class="runaway-close" id="runawayClose">X خروج</button>
+      </div>
+      <button id="forceExitBtn" class="btn" type="button" style="width: 100%;">طيب خلاص طلعني ما اعرف اطلع انت اعظم شخص</button>
+      <p class="small-note">زر X يهرب إذا قربت منه — زر "طيب خلاص" يطلعك مباشرة.</p>
+    </div>
+  </div>
 
   <script>
     const gamesGrid = document.getElementById('gamesGrid');
+    const commentInput = document.getElementById('commentInput');
+    const addCommentBtn = document.getElementById('addCommentBtn');
+    const commentsList = document.getElementById('commentsList');
+    const commentsCount = document.getElementById('commentsCount');
+    const commentsStorageKey = 'abdullahGamesComments';
+    const runawayClose = document.getElementById('runawayClose');
+    const escapeArea = document.getElementById('escapeArea');
+    const forceExitBtn = document.getElementById('forceExitBtn');
 
     async function loadGames() {
-      const response = await fetch('./data/games.json');
+      const response = await fetch('/api/games');
       const games = await response.json();
 
       gamesGrid.innerHTML = games.map((game) => `
@@ -103,12 +284,154 @@
           <div class="emoji">${game.thumbnail}</div>
           <div class="game-name">${game.name}</div>
           <p>${game.description}</p>
-          <a href="./game.html?slug=${game.slug}"><button class="btn">ابدأ اللعب</button></a>
+          <a href="/game.html?slug=${game.slug}"><button class="btn">ابدأ اللعب</button></a>
         </article>
       `).join('');
     }
 
+    function normalizeComments(rawValue) {
+      if (!Array.isArray(rawValue)) return [];
+      return rawValue
+        .map((item) => {
+          if (typeof item === 'string') {
+            return { text: item, createdAt: Date.now() };
+          }
+          if (!item || typeof item.text !== 'string') {
+            return null;
+          }
+          return {
+            text: item.text,
+            createdAt: typeof item.createdAt === 'number' ? item.createdAt : Date.now()
+          };
+        })
+        .filter(Boolean);
+    }
+
+    function loadComments() {
+      const parsed = JSON.parse(localStorage.getItem(commentsStorageKey) || '[]');
+      return normalizeComments(parsed);
+    }
+
+    function saveComments(comments) {
+      localStorage.setItem(commentsStorageKey, JSON.stringify(comments));
+    }
+
+    function formatCommentTime(timestamp) {
+      return new Date(timestamp).toLocaleString('ar-SA', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function renderComments() {
+      const comments = loadComments();
+      commentsCount.textContent = `(${comments.length})`;
+      commentsList.innerHTML = '';
+
+      if (!comments.length) {
+        commentsList.innerHTML = '<li class="empty-comments">ما فيه تعليقات حالياً، اكتب أول تعليق 👇</li>';
+        return;
+      }
+
+      comments.forEach((comment, index) => {
+        const item = document.createElement('li');
+        item.className = 'comment-item';
+
+        const content = document.createElement('div');
+        content.className = 'comment-content';
+
+        const textElement = document.createElement('span');
+        textElement.className = 'comment-text';
+        textElement.textContent = comment.text;
+
+        const timeElement = document.createElement('span');
+        timeElement.className = 'comment-time';
+        timeElement.textContent = formatCommentTime(comment.createdAt);
+
+        const removeButton = document.createElement('button');
+        removeButton.className = 'comment-remove';
+        removeButton.dataset.index = String(index);
+        removeButton.type = 'button';
+        removeButton.setAttribute('aria-label', 'حذف التعليق');
+        removeButton.textContent = '✕';
+
+        content.appendChild(textElement);
+        content.appendChild(timeElement);
+        item.appendChild(content);
+        item.appendChild(removeButton);
+        commentsList.appendChild(item);
+      });
+    }
+
+    function addComment() {
+      const text = commentInput.value.trim();
+      if (!text) return;
+
+      const comments = loadComments();
+      comments.unshift({
+        text,
+        createdAt: Date.now()
+      });
+      saveComments(comments);
+      commentInput.value = '';
+      renderComments();
+    }
+
+    addCommentBtn.addEventListener('click', addComment);
+    commentInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addComment();
+      }
+    });
+
+    commentsList.addEventListener('click', (event) => {
+      if (!(event.target instanceof HTMLElement) || !event.target.classList.contains('comment-remove')) return;
+      const index = Number(event.target.dataset.index);
+      const comments = loadComments();
+      comments.splice(index, 1);
+      saveComments(comments);
+      renderComments();
+    });
+
+    function jumpCloseButton() {
+      const areaRect = escapeArea.getBoundingClientRect();
+      const maxX = Math.max(10, areaRect.width - runawayClose.offsetWidth - 10);
+      const maxY = Math.max(10, areaRect.height - runawayClose.offsetHeight - 10);
+      runawayClose.style.left = `${Math.floor(Math.random() * maxX)}px`;
+      runawayClose.style.top = `${Math.floor(Math.random() * maxY)}px`;
+      runawayClose.style.transform = 'none';
+    }
+
+    runawayClose.addEventListener('mouseenter', jumpCloseButton);
+    runawayClose.addEventListener('click', jumpCloseButton);
+
+    forceExitBtn.addEventListener('click', () => {
+      document.body.classList.remove('overlay-open');
+      sessionStorage.setItem('surpriseSeen', 'true');
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        document.body.classList.remove('overlay-open');
+      }
+    });
+
+    window.addEventListener('load', () => {
+      renderComments();
+
+      if (sessionStorage.getItem('surpriseSeen') !== 'true') {
+        setTimeout(() => {
+          document.body.classList.add('overlay-open');
+        }, 1800);
+      }
+    });
+
     loadGames();
   </script>
+
 </body>
 </html>
