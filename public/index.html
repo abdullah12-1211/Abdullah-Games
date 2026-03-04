@@ -111,6 +111,10 @@
     #HCB_comment_box {
       direction: rtl;
       text-align: right;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.35), rgba(2, 6, 23, 0.15));
+      border: 1px solid #1f3147;
+      border-radius: 18px;
+      padding: 1rem;
     }
 
     #HCB_comment_box textarea,
@@ -122,6 +126,7 @@
       border: 1px solid #cbd5e1;
       padding: 0.65rem;
       font-family: inherit;
+      margin-top: 0.45rem;
     }
 
     #HCB_comment_box #hcb_form .btn,
@@ -135,6 +140,23 @@
       font-weight: bold;
     }
 
+    #HCB_comment_box h3,
+    #HCB_comment_box h4,
+    #HCB_comment_box b {
+      color: #f8fafc;
+    }
+
+    #HCB_comment_box .home-desc,
+    #HCB_comment_box .hcb-mod,
+    #HCB_comment_box .rss,
+    #HCB_comment_box .hcb-icon {
+      display: none !important;
+    }
+
+    #HCB_comment_box .comment-list {
+      margin-top: 1rem;
+    }
+
     #HCB_comment_box .comment {
       background: #1e293b;
       border: 1px solid #334155;
@@ -142,6 +164,7 @@
       padding: 0.8rem;
       margin-top: 0.8rem;
       color: #e2e8f0;
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.18);
     }
 
     #HCB_comment_box .comment a,
@@ -156,6 +179,48 @@
 
     #HCB_comment_box .date {
       color: #94a3b8;
+    }
+
+    #HCB_comment_box .author {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+      font-weight: 700;
+    }
+
+    #HCB_comment_box .hcb-comment-body,
+    #HCB_comment_box .comment p {
+      line-height: 1.8;
+      color: #e2e8f0;
+    }
+
+    #HCB_comment_box .likes,
+    #HCB_comment_box .likes a,
+    #HCB_comment_box .hcb-comment-tb button,
+    #HCB_comment_box .hcb-comment-tb input,
+    #HCB_comment_box .btn-secondary {
+      color: #cbd5e1;
+    }
+
+    #HCB_comment_box .comment:hover {
+      border-color: #67e8f9;
+      transform: translateY(-1px);
+      transition: 0.2s ease;
+    }
+
+    #HCB_comment_box #hcb_form {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    #HCB_comment_box #hcb_form small,
+    #HCB_comment_box #hcb_form span,
+    #HCB_comment_box label {
+      color: #cbd5e1 !important;
     }
 
     .surprise-overlay {
