@@ -371,12 +371,6 @@
       }
     });
 
-    window.addEventListener('load', () => {
-      if (sessionStorage.getItem('surpriseSeen') !== 'true') {
-        setTimeout(openSurpriseOverlay, 1800);
-      }
-    });
-
     if (!window.hcb_user) {
       window.hcb_user = {};
     }
