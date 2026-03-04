@@ -42,7 +42,7 @@
   <main class="wrapper">
     <div class="top">
       <h1 id="title">...</h1>
-      <a href="/">← الرجوع لصفحة الألعاب</a>
+      <a href="./index.html">← الرجوع لصفحة الألعاب</a>
     </div>
     <iframe id="gameFrame" title="game frame"></iframe>
   </main>
@@ -52,14 +52,19 @@
     const slug = params.get('slug');
 
     async function loadGame() {
-      const response = await fetch(`/api/games/${slug}`);
-
+      const response = await fetch('./data/games.json');
       if (!response.ok) {
         document.getElementById('title').textContent = 'اللعبة غير موجودة';
         return;
       }
 
-      const game = await response.json();
+      const games = await response.json();
+      const game = games.find((item) => item.slug === slug);
+      if (!game) {
+        document.getElementById('title').textContent = 'اللعبة غير موجودة';
+        return;
+      }
+
       document.getElementById('title').textContent = game.name;
       document.getElementById('gameFrame').src = game.path;
     }

@@ -4,20 +4,20 @@
     "name": "لعبة تخمين الرقم",
     "description": "اختر رقمًا من 1 إلى 20 وحاول تخمين الرقم الصحيح بأقل عدد محاولات.",
     "thumbnail": "🎯",
-    "path": "/games/number-guess.html"
+    "path": "./games/number-guess.html"
   },
   {
     "slug": "tic-tac-toe",
     "name": "إكس أو",
     "description": "العب ضد صديقك على نفس الجهاز في لعبة X-O الكلاسيكية.",
     "thumbnail": "❌⭕",
-    "path": "/games/tic-tac-toe.html"
+    "path": "./games/tic-tac-toe.html"
   },
   {
     "slug": "click-challenge",
     "name": "تحدي السرعة",
     "description": "اضغط الزر أكبر عدد ممكن خلال 10 ثواني واكسر رقمك القياسي.",
     "thumbnail": "⚡",
-    "path": "/games/click-challenge.html"
+    "path": "./games/click-challenge.html"
   }
 ]

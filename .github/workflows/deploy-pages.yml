@@ -31,6 +31,7 @@ jobs:
           cp -r public/. dist/
           mkdir -p dist/data
           cp data/games.json dist/data/games.json
+          cp data/comments.json dist/data/comments.json
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
