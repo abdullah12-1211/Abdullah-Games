@@ -286,9 +286,6 @@
     <section class="hero">
       <h1>Abdullah games</h1>
       <p>أهلًا بك في افضل موقع في التاريخ .</p>
-      <div class="hero-actions">
-        <button id="showSurpriseBtn" class="btn btn-secondary" type="button">شغل الحركة الظريفة</button>
-      </div>
     </section>
 
     <section>
@@ -322,7 +319,6 @@
     const runawayClose = document.getElementById('runawayClose');
     const escapeArea = document.getElementById('escapeArea');
     const forceExitBtn = document.getElementById('forceExitBtn');
-    const showSurpriseBtn = document.getElementById('showSurpriseBtn');
 
     async function loadGames() {
       const response = await fetch('./data/games.json');
@@ -363,12 +359,20 @@
     runawayClose.addEventListener('mouseenter', jumpCloseButton);
     runawayClose.addEventListener('click', jumpCloseButton);
     forceExitBtn.addEventListener('click', closeSurpriseOverlay);
-    showSurpriseBtn.addEventListener('click', openSurpriseOverlay);
 
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeSurpriseOverlay();
       }
+    });
+
+    window.addEventListener('load', () => {
+      if (sessionStorage.getItem('surpriseSeen') === 'true') {
+        return;
+      }
+
+      const randomDelay = 3000 + Math.floor(Math.random() * 9000);
+      setTimeout(openSurpriseOverlay, randomDelay);
     });
 
     if (!window.hcb_user) {
